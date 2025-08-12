@@ -79,7 +79,7 @@ Strong passwords keep hackers out of your accounts.
 
 ## 🛠️ Built With
 
-- HTML - The structure
+- PHP + HTML - The structure
 - CSS - The look
 - JavaScript - The password making
 
