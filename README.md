@@ -119,6 +119,10 @@ Password Generator
 - Easy to remember
 - Still very secure
 
+## 📜 License
+
+MIT License - Use freely, modify, share. See [LICENSE](LICENSE) file.
+
 ---
 
 <div align="center">
