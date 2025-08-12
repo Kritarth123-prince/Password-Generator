@@ -17,13 +17,6 @@
 
 ---
 
-## 📸 Screenshots
-
-| ![Password Generator](images/password_gen.png) | ![Options](images/advance_options.png) | ![Passphrase](images/passphrase.png) |
-|:--:|:--:|:--:|
-| Password Generator | Advanced Options | Passphrase Password |
-
-
 ## ✨ What It Does
 
 Make strong passwords that hackers can't guess. Works in your browser.
@@ -103,6 +96,12 @@ Password Generator
 │ [Generate] [Copy]   │
 └─────────────────────┘
 ```
+
+## 📸 Screenshots
+
+| ![Password Generator](images/password_gen.png) | ![Options](images/advance_options.png) | ![Passphrase](images/passphrase.png) |
+|:--:|:--:|:--:|
+| Password Generator | Advanced Options | Passphrase Password |
 
 ## 🔗 Works Great With
 
