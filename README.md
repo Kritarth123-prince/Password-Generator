@@ -107,6 +107,13 @@ Password Generator
 
 [🔐 Password Manager](https://kritarth.byethost14.com/password_manager/login.php) - Save your new passwords safely
 
+
+## 📖 Documentation
+For full project details, setup instructions, and feature overview, check out the:
+
+👉 [![Well Documentation on Notion](https://img.shields.io/badge/Notion-Documentation-blueviolet?style=for-the-badge&logo=notion)]([https://sleepy-lyric-28b.notion.site/Password-Manager-24d059d9?pvs=73](https://sleepy-lyric-28b.notion.site/Password-Generator-24d05f803ca580e9b13cfbfadef39feb?pvs=73))
+
+
 ## ⚡ Two Modes
 
 **Password Mode:**
