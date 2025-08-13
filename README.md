@@ -4,14 +4,14 @@
 
 *Strong • Random • Secure*
 
-[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Generate_Now-green?style=for-the-badge)](https://kritarth.byethost14.com/password_generator/)
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Generate_Now-green?style=for-the-badge)](https://kritarth.byethost18.com/password_generator/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)]()
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)]()
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)]()
 
 **Create unbreakable passwords in seconds**
 
-[🔐 Password Manager](https://kritarth.byethost14.com/password_manager/login.php) • [🚀 Try Generator](https://kritarth.byethost14.com/password_generator/) • [📖 How to Use](#how-to-use)
+[🔐 Password Manager](https://kritarth.byethost18.com/password_manager/login.php) • [🚀 Try Generator](https://kritarth.byethost18.com/password_generator/) • [📖 How to Use](#how-to-use)
 
 </div>
 
@@ -68,7 +68,7 @@ Strong passwords keep hackers out of your accounts.
 - **Longer = Stronger** (use 12+ characters)
 - **Mix Everything** (letters + numbers + symbols)
 - **Different for Each Site** (don't reuse passwords)
-- **Store Safely** with [Password Manager](https://kritarth.byethost14.com/password_manager/login.php)
+- **Store Safely** with [Password Manager](https://kritarth.byethost18.com/password_manager/login.php)
 
 ## 📱 Works Everywhere
 
@@ -105,7 +105,7 @@ Password Generator
 
 ## 🔗 Works Great With
 
-[🔐 Password Manager](https://kritarth.byethost14.com/password_manager/login.php) - Save your new passwords safely
+[🔐 Password Manager](https://kritarth.byethost18.com/password_manager/login.php) - Save your new passwords safely
 
 ## 📖 Documentation
 
