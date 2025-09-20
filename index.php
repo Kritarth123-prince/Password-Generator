@@ -1,6 +1,8 @@
 <?php
 if ($_POST['action'] == 'generate') {
     $type = $_POST['type'] ?? 'password';
+    $prefix = isset($_POST['use_prefix']) && $_POST['use_prefix'] == 'true' ? $_POST['prefix'] : '';
+    $postfix = isset($_POST['use_postfix']) && $_POST['use_postfix'] == 'true' ? $_POST['postfix'] : '';
 
     if ($type == 'passphrase') {
         $words = file('words_alpha.txt', FILE_IGNORE_NEW_LINES);
@@ -11,27 +13,34 @@ if ($_POST['action'] == 'generate') {
             $result[] = $words[rand(0, count($words) - 1)];
         }
 
-        echo implode('-', $result);
+        echo $prefix . implode('-', $result) . $postfix;
     } else {
-        $chars = '';
+        $totalLength = $_POST['length'] ?? 12;
+        $prefixLength = strlen($prefix);
+        $postfixLength = strlen($postfix);
+        $passwordLength = $totalLength - $prefixLength - $postfixLength;
 
+        if ($passwordLength <= 0) {
+            echo "Error: Prefix + Postfix too long!";
+            exit;
+        }
+
+        $chars = '';
         if ($_POST['lower'] == 'true') $chars .= 'abcdefghijklmnopqrstuvwxyz';
         if ($_POST['upper'] == 'true') $chars .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        if ($_POST['num'] == 'true')   $chars .= '0123456789';
-        if ($_POST['sym'] == 'true')   $chars .= '!@#$%^&*';
+        if ($_POST['num'] == 'true') $chars .= '0123456789';
+        if ($_POST['sym'] == 'true') $chars .= '!@#$%^&*';
 
         if (!$chars) {
             $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
         }
 
         $password = '';
-        $length = $_POST['length'] ?? 12;
-
-        for ($i = 0; $i < $length; $i++) {
+        for ($i = 0; $i < $passwordLength; $i++) {
             $password .= $chars[rand(0, strlen($chars) - 1)];
         }
 
-        echo $password;
+        echo $prefix . $password . $postfix;
     }
     exit;
 }
@@ -42,12 +51,7 @@ if ($_POST['action'] == 'generate') {
     <title>Password Generator 🔐</title>
     <link rel="icon" href="assets/icon.png" type="image/png">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box }
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #667eea, #764ba2);
@@ -56,7 +60,6 @@ if ($_POST['action'] == 'generate') {
             align-items: center;
             justify-content: center
         }
-
         .box {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -66,7 +69,6 @@ if ($_POST['action'] == 'generate') {
             color: white;
             max-width: 350px
         }
-
         .password {
             background: rgba(255,255,255,0.9);
             color: black;
@@ -80,13 +82,15 @@ if ($_POST['action'] == 'generate') {
             align-items: center;
             justify-content: center;
         }
-
-
-        input[type="range"] {
+        input[type="range"] { width: 100%; margin: 10px 0 }
+        input[type="text"] {
+            padding: 8px;
+            border-radius: 5px;
+            border: none;
+            margin: 5px 0;
             width: 100%;
-            margin: 10px 0
+            font-size: 14px
         }
-
         .btn {
             background: linear-gradient(45deg, #ff6b6b, #ee5a24);
             color: white;
@@ -97,15 +101,8 @@ if ($_POST['action'] == 'generate') {
             cursor: pointer;
             font-size: 16px
         }
-
-        .copy-btn {
-            background: linear-gradient(45deg, #4ecdc4, #2ecc71)
-        }
-
-        .adv-btn {
-            background: linear-gradient(45deg, #9b59b6, #8e44ad)
-        }
-
+        .copy-btn { background: linear-gradient(45deg, #4ecdc4, #2ecc71) }
+        .adv-btn { background: linear-gradient(45deg, #9b59b6, #8e44ad) }
         .advanced {
             margin: 15px 0;
             padding: 15px;
@@ -113,16 +110,8 @@ if ($_POST['action'] == 'generate') {
             border-radius: 10px;
             display: none
         }
-
-        .option {
-            margin: 8px 0;
-            text-align: left
-        }
-
-        .option input {
-            margin-right: 5px
-        }
-
+        .option { margin: 8px 0; text-align: left }
+        .option input { margin-right: 5px }
         .notify {
             position: fixed;
             top: 20px;
@@ -133,96 +122,120 @@ if ($_POST['action'] == 'generate') {
             transform: translateX(300px);
             transition: transform 0.3s
         }
-
-        .notify.show {
-            transform: translateX(0)
-        }
-
-        .success {
-            background: #2ecc71
-        }
-
-        .info {
-            background: #3498db
-        }
+        .notify.show { transform: translateX(0) }
+        .success { background: #2ecc71 }
+        .info { background: #3498db }
+        .error { background: #e74c3c }
     </style>
 </head>
 <body>
     <div class="box">
         <h2>🔐 Password Generator</h2>
-
         <div>
             <input type="radio" id="pwd" name="type" value="password" checked onchange="toggleType()">
             <label for="pwd">Password</label>
             <input type="radio" id="phrase" name="type" value="passphrase" onchange="toggleType()">
             <label for="phrase">Passphrase</label>
         </div>
-
         <div id="lenSec">
             Length: <span id="len">12</span>
             <input type="range" id="length" min="8" max="40" value="12" oninput="document.getElementById('len').textContent=this.value">
         </div>
-
         <div id="wordSec" style="display:none">
             Words: <span id="wlen">4</span>
             <input type="range" id="wordCount" min="2" max="6" value="4" oninput="document.getElementById('wlen').textContent=this.value">
         </div>
-
         <div id="advBtn">
             <button onclick="toggleAdv()" class="btn adv-btn">⚙️ Advanced</button>
         </div>
-
         <div class="advanced" id="adv">
-            <div class="option">
-                <input type="checkbox" id="lower" checked>
-                <label for="lower">a-z</label>
+            <div id="charOptions">
+                <div class="option">
+                    <input type="checkbox" id="lower" checked>
+                    <label for="lower">a-z</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="upper" checked>
+                    <label for="upper">A-Z</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="num" checked>
+                    <label for="num">0-9</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="sym" checked>
+                    <label for="sym">!@#$</label>
+                </div>
             </div>
             <div class="option">
-                <input type="checkbox" id="upper" checked>
-                <label for="upper">A-Z</label>
+                <input type="checkbox" id="use_prefix" onchange="togglePrefix()">
+                <label for="use_prefix">Add Prefix</label>
+            </div>
+            <div id="prefix-section" style="display:none">
+                <input type="text" id="prefix" placeholder="Start with...">
             </div>
             <div class="option">
-                <input type="checkbox" id="num" checked>
-                <label for="num">0-9</label>
+                <input type="checkbox" id="use_postfix" onchange="togglePostfix()">
+                <label for="use_postfix">Add Postfix</label>
             </div>
-            <div class="option">
-                <input type="checkbox" id="sym" checked>
-                <label for="sym">!@#$</label>
+            <div id="postfix-section" style="display:none">
+                <input type="text" id="postfix" placeholder="End with...">
             </div>
         </div>
-
         <div class="password" id="pass">Click Generate</div>
         <button onclick="generate()" class="btn">🎲 Generate</button>
         <button onclick="copy()" class="btn copy-btn">📋 Copy</button>
     </div>
-
     <div class="notify" id="notify"></div>
 
     <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('use_prefix').checked = false;
+            document.getElementById('prefix-section').style.display = 'none';
+
+            document.getElementById('use_postfix').checked = false;
+            document.getElementById('postfix-section').style.display = 'none';
+        });
+        function togglePrefix() {
+            document.getElementById('prefix-section').style.display = 
+                document.getElementById('use_prefix').checked ? 'block' : 'none';
+        }
+        function togglePostfix() {
+            document.getElementById('postfix-section').style.display = 
+                document.getElementById('use_postfix').checked ? 'block' : 'none';
+        }
         function toggleAdv() {
             var adv = document.getElementById('adv');
             adv.style.display = adv.style.display === 'block' ? 'none' : 'block';
         }
-
         function toggleType() {
             var isPhrase = document.getElementById('phrase').checked;
             document.getElementById('lenSec').style.display = isPhrase ? 'none' : 'block';
             document.getElementById('wordSec').style.display = isPhrase ? 'block' : 'none';
-            document.getElementById('advBtn').style.display = isPhrase ? 'none' : 'block';
             document.getElementById('adv').style.display = 'none';
+            document.getElementById('charOptions').style.display = isPhrase ? 'none' : 'block';
         }
-
         function generate() {
             var type = document.querySelector('input[name="type"]:checked').value;
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '', true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.onload = function () {
-                document.getElementById('pass').textContent = xhr.responseText;
-                showNotify('Generated!', 'info');
+                var response = xhr.responseText;
+                if (response.includes("Error:")) {
+                    showNotify(response, 'error');
+                    document.getElementById('pass').textContent = 'Click Generate';
+                } else {
+                    document.getElementById('pass').textContent = response;
+                    showNotify('Generated!', 'info');
+                }
             };
 
             var data = 'action=generate&type=' + type;
+            data += '&use_prefix=' + document.getElementById('use_prefix').checked;
+            data += '&use_postfix=' + document.getElementById('use_postfix').checked;
+            data += '&prefix=' + encodeURIComponent(document.getElementById('prefix').value);
+            data += '&postfix=' + encodeURIComponent(document.getElementById('postfix').value);
 
             if (type === 'password') {
                 data += '&length=' + document.getElementById('length').value;
@@ -233,18 +246,15 @@ if ($_POST['action'] == 'generate') {
             } else {
                 data += '&word_count=' + document.getElementById('wordCount').value;
             }
-
             xhr.send(data);
         }
-
         function copy() {
             var text = document.getElementById('pass').textContent;
-            if (text !== 'Click Generate') {
+            if (text !== 'Click Generate' && !text.includes('Error:')) {
                 navigator.clipboard.writeText(text);
                 showNotify('Copied!', 'success');
             }
         }
-
         function showNotify(msg, type) {
             var notify = document.getElementById('notify');
             notify.textContent = msg;
